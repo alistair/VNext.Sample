@@ -1,3 +1,11 @@
 obj
 *.suo
 *.kproj.user
+
+AWSStopper.sln.ide
+
+#Nuget packages
+packages
+
+node_modules
+bower_components
