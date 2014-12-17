@@ -1,11 +1,58 @@
-obj
-*.suo
-*.kproj.user
+#ignore thumbnails created by windows
+Thumbs.db
 
-AWSStopper.sln.ide
+#Ignore files build by Visual Studio
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+*.build.csdef
+
+#ignore merge files
+*.orig
+csx/
+
+#Performance Reports
+*.vsp
+*.azurePubxml
 
 #Nuget packages
 packages
+.nuget/packages.config
 
+#mightymoose / autotest
+AutoTest.config*
+
+#nodejs
 node_modules
-bower_components
+
+#outputfiles
+publish
+
+#Less Compiling
+!lesscompiler/*
+!lesscompiler/bin/*
+!lesscompiler/bin/node_modules/less/bin
+*.css
+src/TheHive/TheHive/js/siteJs.js.map
