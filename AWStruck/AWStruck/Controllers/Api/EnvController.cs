@@ -7,7 +7,7 @@ using AttributeRouting.Web.Http;
 
 namespace AWStruck.Controllers.Api
 {
-  public class EnvController
+  public class EnvController : Controller
   {
     [GET("/api/env/start")]
     [HttpGet]
