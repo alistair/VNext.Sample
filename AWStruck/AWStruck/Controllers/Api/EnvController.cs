@@ -24,7 +24,7 @@ namespace AWStruck.Controllers.Api
     }
 
     [HttpGet]
-    [Route("api/env/nogo")]
+    [Route("api/env/nogo/{envId}")]
     public string StopEnv([FromUri]string envId)
     {
       Environments.StopEnvironmentInternal(envId);
@@ -32,7 +32,7 @@ namespace AWStruck.Controllers.Api
     }
 
     [HttpGet]
-    [Route("api/env/go")]
+    [Route("api/env/go/{envId}")]
     public string StartEnv([FromUri]string envId)
     {
       Environments.StartEnvironmentInternal(envId);
@@ -40,7 +40,7 @@ namespace AWStruck.Controllers.Api
     }
 
     //Deprecated
-    [Route("api/env/start")]
+    [Route("api/env/start/")]
     [HttpGet]
     public StartInstancesResponse StartInstance()
     {
