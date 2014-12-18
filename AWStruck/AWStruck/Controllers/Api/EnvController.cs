@@ -24,8 +24,10 @@ namespace AWStruck.Controllers.Api
 {
   public class EnvController : ApiController
   {
-        protected readonly Lazy<IHubContext> SwitchHub = new Lazy<IHubContext>(() => GlobalHost.ConnectionManager.GetHubContext<SwitchHub>());
-        private readonly EnvService _envService;
+    protected readonly Lazy<IHubContext> SwitchHub =
+      new Lazy<IHubContext>(() => GlobalHost.ConnectionManager.GetHubContext<SwitchHub>());
+
+    private readonly EnvService _envService;
 
     public EnvController()
     {
@@ -48,40 +50,40 @@ namespace AWStruck.Controllers.Api
       var desc = results.Select(x => new CronDescription
       {
         Name = x["Key"].AsString.Split('_')[1],
-        Description = Cron.GetDescription((string)x["Value"])
+        Description = Cron.GetDescription((string) x["Value"])
       }).ToArray();
 
       return env.CloneWithAutoAndDescriptions(results.Any(), desc);
     }
 
     [HttpGet]
-        [Route("api/env/nogo/{envId}")]
-        public string StopEnv([FromUri] string envId)
+    [Route("api/env/nogo/{envId}")]
+    public string StopEnv([FromUri] string envId)
     {
       Environments.StopEnvironmentInternal(envId);
 
-            SwitchHub.Value.Clients.All.signal(
-                new InstanceStatus
-                {
-                    Id = envId,
-                    Status = "Stopped"
-                });
+      SwitchHub.Value.Clients.All.signal(
+        new InstanceStatus
+        {
+          Id = envId,
+          Status = "Stopped"
+        });
 
       return "done";
     }
 
     [HttpGet]
-        [Route("api/env/go/{envId}")]
-        public string StartEnv([FromUri] string envId)
+    [Route("api/env/go/{envId}")]
+    public string StartEnv([FromUri] string envId)
     {
       Environments.StartEnvironmentInternal(envId);
 
-            SwitchHub.Value.Clients.All.signal(
-                new InstanceStatus
-                {
-                    Id = envId,
-                    Status = "Started"
-                });
+      SwitchHub.Value.Clients.All.signal(
+        new InstanceStatus
+        {
+          Id = envId,
+          Status = "Started"
+        });
       return "done";
     }
 
@@ -94,28 +96,28 @@ namespace AWStruck.Controllers.Api
       return "done";
     }
 
-        //Deprecated
-        [Route("api/env/start/")]
+    //Deprecated
+    [Route("api/env/start/")]
     [HttpGet]
-        public StartInstancesResponse StartInstance()
+    public StartInstancesResponse StartInstance()
     {
-            return _envService.Start();
+      return _envService.Start();
     }
 
-        //Deprecated
+    //Deprecated
     [Route("api/env/stop")]
     [HttpGet]
-        public StopInstancesResponse StopInstance()
-        {
-            return _envService.Stop();
-        }
-
-
-        [Route("api/savings")]
-        [HttpGet]
-        public SavingsResponse GetSavings()
+    public StopInstancesResponse StopInstance()
     {
-            return SavingsHelper.CalculateSavings();
+      return _envService.Stop();
+    }
+
+
+    [Route("api/savings")]
+    [HttpGet]
+    public SavingsResponse GetSavings()
+    {
+      return SavingsHelper.CalculateSavings();
     }
   }
 }
