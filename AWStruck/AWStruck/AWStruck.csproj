@@ -221,6 +221,7 @@
     <Compile Include="AWS\Instances.cs" />
     <Compile Include="AWS\Tasks.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\EnvController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="AWS\Environment.cs" />
@@ -233,6 +234,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
+    <Compile Include="Services\EnvService.cs" />
+    <Compile Include="Services\IEnv.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
