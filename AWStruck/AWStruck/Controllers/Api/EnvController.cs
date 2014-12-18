@@ -33,13 +33,13 @@ namespace AWStruck.Controllers.Api
 
     [HttpGet]
     [Route("api/env/go")]
-    public string StartEnv(string envId)
+    public string StartEnv([FromUri]string envId)
     {
       Environments.StartEnvironmentInternal(envId);
       return "done";
     }
 
-		[Route("api/env/start")]
+    [Route("api/env/start")]
     [HttpGet]
     public StartInstancesResponse StartInstance()
     {
@@ -57,7 +57,7 @@ namespace AWStruck.Controllers.Api
     [HttpGet]
     public IEnumerable<Environment> Envs()
     {
-      return _envService.Envs();
+      return Environments.GetEnvironments(Global.CreateAmazonClient());
     }
   }
 }
