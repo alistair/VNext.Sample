@@ -10,7 +10,7 @@ namespace AWStruck.AWS
 {
 	public static class Global
 	{
-		private static Task<IEnumerable<Environment>> GetEnvironments()
+		private static IEnumerable<Environment> GetEnvironments()
 		{
 			return Environments.GetEnvironments(CreateAmazonClient());
 		}
