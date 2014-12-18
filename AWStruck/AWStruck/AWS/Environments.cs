@@ -13,12 +13,18 @@ namespace AWStruck.AWS
 		public static IEnumerable<Environment> GetEnvironments(IAmazonEC2 ec2)
 		{
 			var filters = GetEnvironmentTagFilters();
-      var result = GetTagsSync(ec2, filters);
-			return result.Tags.GroupBy(x => x.Value, (s, results) => new Environment
+			var result = GetTagsSync(ec2, filters);
+			var envs = result.Tags.GroupBy(x => x.Value, (s, results) => new Environment
 			{
 				Name = s,
-				InstanceIds = results.Select(x => x.ResourceId).Distinct().ToList()
 			});
+
+		  foreach (var env in envs)
+		  {
+		    env.State = GetInstanceState(ec2, env.InstanceIds.FirstOrDefault());
+		  }
+
+		  return envs;
 		}
 
 		private static List<Filter> GetEnvironmentTagFilters()
@@ -60,5 +66,16 @@ namespace AWStruck.AWS
 		{
 		  return () => StopEnvironmentInternal(taskId);
 		}
+
+	  public static string GetInstanceState(IAmazonEC2 ec2, string instanceId)
+	  {
+      //State is taken from the first instance
+	    var response = ec2.DescribeInstances(new DescribeInstancesRequest()
+	    {
+	      InstanceIds = new List<string>() {instanceId}
+	    });
+
+	    return response.DescribeInstancesResult.Reservations[0].Instances[0].State.Name.ToString();
+	  }
 	}
 }

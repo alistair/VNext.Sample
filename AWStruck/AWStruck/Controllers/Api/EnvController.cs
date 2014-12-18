@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Web.Http;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Amazon.EC2.Model;
 using AWStruck.AWS;
 using AWStruck.Services;
 
@@ -18,7 +20,7 @@ namespace AWStruck.Controllers.Api
     [HttpGet]
     public IEnumerable<Environment> Index()
     {
-     return Environments.GetEnvironments(Global.CreateAmazonClient());
+      return Environments.GetEnvironments(Global.CreateAmazonClient());
     }
 
     [HttpGet]
@@ -39,16 +41,23 @@ namespace AWStruck.Controllers.Api
 
 		[Route("api/env/start")]
     [HttpGet]
-    public void StartInstance()
+    public StartInstancesResponse StartInstance()
     {
-      _envService.Start();
+      return _envService.Start();
     }
 
     [Route("api/env/stop")]
     [HttpGet]
-    public void StopInstance()
+    public StopInstancesResponse StopInstance()
     {
-      _envService.Stop();
+      return _envService.Stop();
+    }
+
+    [Route("api/env")]
+    [HttpGet]
+    public IEnumerable<Environment> Envs()
+    {
+      return _envService.Envs();
     }
   }
 }

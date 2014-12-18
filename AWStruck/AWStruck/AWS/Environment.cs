@@ -13,5 +13,6 @@ namespace AWStruck
 		public string Name { get; set; }
 		public int InstanceCount { get { return InstanceIds.Count(); } }
 		public List<string> InstanceIds { get; set; }
+    public string State { get; set; }
 	}
 }
