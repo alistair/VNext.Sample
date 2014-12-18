@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace AWStruck
 {
@@ -21,16 +23,25 @@ namespace AWStruck
 		public List<string> InstanceIds { get; set; }
     
     public bool IsAuto { get; set; }
+    public CronDescription[] Descriptions { get; set; }
 
-	  public Environment CloneWithAuto(bool auto)
+    public Environment CloneWithAutoAndDescriptions(bool auto, CronDescription[] descs)
 	  {
 	    return new Environment()
 	    {
 	      Name = Name,
 	      InstanceIds = InstanceIds,
-	      IsAuto = auto
+	      IsAuto = auto,
+        State = State,
+        Descriptions = descs
 	    };
 	  }
         public string State { get; set; }
 	}
+
+  public class CronDescription
+  {
+    public string Name { get; set; }
+    public string Description { get; set; }
+  }
 }

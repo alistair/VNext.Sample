@@ -35,14 +35,23 @@ namespace AWStruck.Controllers.Api
     [HttpGet]
     public IEnumerable<Environment> Index()
     {
-      return Environments.GetEnvironments(Global.CreateAmazonClient()).Select(x => x.CloneWithAuto(IsAuto(x.Name)));
+      return Environments.GetEnvironments(Global.CreateAmazonClient()).Select(Map);
     }
 
-    private bool IsAuto(string envId)
+    private Environment Map(Environment env)
     {
-      return MongoProvider.Database.Value.GetCollection("hangfire.set")
+      var results = MongoProvider.Database.Value.GetCollection("hangfire.hash")
         .AsQueryable()
-        .Count(x => ((string) x["Key"]).StartsWith(string.Format("recurring-job:{0}", envId))) > 0;
+        .Where(x => ((string) x["Key"]).StartsWith(string.Format("recurring-job:{0}", env.Name)) && x["Field"] == "Cron")
+        .ToList();
+
+      var desc = results.Select(x => new CronDescription
+      {
+        Name = x["Key"].AsString.Split('_')[1],
+        Description = Cron.GetDescription((string)x["Value"])
+      }).ToArray();
+
+      return env.CloneWithAutoAndDescriptions(results.Any(), desc);
     }
 
     [HttpGet]
@@ -80,8 +89,8 @@ namespace AWStruck.Controllers.Api
     [Route("api/env/createSchedule")]
     public string CreateEnvironment([FromUri] string envId)
     {
-      RecurringJob.AddOrUpdate(string.Format("{0}_start", envId), Environments.StartEnvironment(envId), "0 6 * * 1,2,3,4,5");
-      RecurringJob.AddOrUpdate(string.Format("{0}_stop", envId), Environments.StopEnvironment(envId), "0 19 * * 1,2,3,4,5");
+      RecurringJob.AddOrUpdate(string.Format("{0}_start", envId), Environments.StartEnvironment(envId), "5 * * * *");
+      RecurringJob.AddOrUpdate(string.Format("{0}_stop", envId), Environments.StopEnvironment(envId), "5 * * * *");
       return "done";
     }
 
@@ -101,12 +110,6 @@ namespace AWStruck.Controllers.Api
             return _envService.Stop();
         }
 
-        [Route("api/env")]
-        [HttpGet]
-        public IEnumerable<Environment> Envs()
-        {
-            return Environments.GetEnvironments(Global.CreateAmazonClient());
-        }
 
         [Route("api/savings")]
         [HttpGet]
