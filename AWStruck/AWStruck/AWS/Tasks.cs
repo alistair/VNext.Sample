@@ -14,8 +14,7 @@ namespace AWStruck.AWS
 
 		public static void StopInstancesTask(string taskId)
 		{
-			//StopInstances(CreateAmazonClient(), "i-10f40d1e");
-			Console.WriteLine("StopInstance " + taskId);
+			//Console.WriteLine("StopInstance " + taskId);
 			BackgroundJob.Schedule(() => StartInstancesTask(taskId), DateTimeOffset.UtcNow.AddMinutes(5));
 		}
 

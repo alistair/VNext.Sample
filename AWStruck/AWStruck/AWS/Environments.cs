@@ -10,10 +10,10 @@ namespace AWStruck.AWS
 {
 	public static class Environments
 	{
-		public static async Task<IEnumerable<Environment>> GetEnvironments(IAmazonEC2 ec2)
+		public static IEnumerable<Environment> GetEnvironments(IAmazonEC2 ec2)
 		{
 			var filters = GetEnvironmentTagFilters();
-			var result = await GetTags(ec2, filters);
+      var result = GetTagsSync(ec2, filters);
 			return result.Tags.GroupBy(x => x.Value, (s, results) => new Environment
 			{
 				Name = s,
@@ -36,14 +36,29 @@ namespace AWStruck.AWS
 			return ec2.DescribeTagsAsync(new DescribeTagsRequest(filters));
 		}
 
+    private static DescribeTagsResponse GetTagsSync(IAmazonEC2 ec2, List<Filter> filters)
+    {
+      return ec2.DescribeTags(new DescribeTagsRequest(filters));
+    }
+
+	  public static void StartEnvironmentInternal(string taskId)
+	  {
+      Instances.Start(Global.CreateAmazonClient(), GetEnvironments(Global.CreateAmazonClient()).First(x => x.Name == taskId).InstanceIds.ToArray());
+	  }
+
 		public static Expression<Action> StartEnvironment(string taskId)
 		{
-			return () => Instances.Start(Global.CreateAmazonClient(), GetEnvironments(Global.CreateAmazonClient()).Result.First(x => x.Name == taskId).InstanceIds.ToArray());
+		  return () => StartEnvironmentInternal(taskId);
 		}
+
+    public static void StopEnvironmentInternal(string taskId)
+    {
+      Instances.Stop(Global.CreateAmazonClient(), GetEnvironments(Global.CreateAmazonClient()).First(x => x.Name == taskId).InstanceIds.ToArray());
+    }
 
 		public static Expression<Action> StopEnvironment(string taskId)
 		{
-			return () => Instances.Start(Global.CreateAmazonClient(), GetEnvironments(Global.CreateAmazonClient()).Result.First(x => x.Name == taskId).InstanceIds.ToArray());
+		  return () => StopEnvironmentInternal(taskId);
 		}
 	}
 }
