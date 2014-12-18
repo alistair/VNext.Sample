@@ -88,11 +88,11 @@ namespace AWStruck.Controllers.Api
     }
 
     [HttpGet]
-    [Route("api/env/createSchedule")]
+    [Route("api/env/createSchedule/{envId}")]
     public string CreateEnvironment([FromUri] string envId)
     {
-      RecurringJob.AddOrUpdate(string.Format("{0}_start", envId), Environments.StartEnvironment(envId), "5 * * * *");
-      RecurringJob.AddOrUpdate(string.Format("{0}_stop", envId), Environments.StopEnvironment(envId), "5 * * * *");
+      RecurringJob.AddOrUpdate(string.Format("{0}_start", envId), Environments.StartEnvironment(envId), "5 6 * * *");
+      RecurringJob.AddOrUpdate(string.Format("{0}_stop", envId), Environments.StopEnvironment(envId), "5 20 * * *");
       return "done";
     }
 
