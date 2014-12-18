@@ -24,8 +24,9 @@ namespace AWStruck
     
     public bool IsAuto { get; set; }
     public CronDescription[] Descriptions { get; set; }
+    public string State { get; set; }
 
-    public Environment CloneWithAutoAndDescriptions(bool auto, CronDescription[] descs)
+     public Environment CloneWithAutoAndDescriptions(bool auto, CronDescription[] descs)
 	  {
 	    return new Environment()
 	    {
@@ -36,7 +37,7 @@ namespace AWStruck
         Descriptions = descs
 	    };
 	  }
-        public string State { get; set; }
+        
 	}
 
   public class CronDescription
