@@ -19,5 +19,6 @@ namespace AWStruck
 
         public List<string> InstanceIds { get; set; }
         public string State { get; set; }
+        public string Type { get; set; }
     }
 }
