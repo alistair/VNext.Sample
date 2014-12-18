@@ -39,6 +39,7 @@ namespace AWStruck.Controllers.Api
       return "done";
     }
 
+    //Deprecated
     [Route("api/env/start")]
     [HttpGet]
     public StartInstancesResponse StartInstance()
@@ -46,6 +47,7 @@ namespace AWStruck.Controllers.Api
       return _envService.Start();
     }
 
+    //Deprecated
     [Route("api/env/stop")]
     [HttpGet]
     public StopInstancesResponse StopInstance()

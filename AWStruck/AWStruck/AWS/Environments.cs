@@ -17,7 +17,8 @@ namespace AWStruck.AWS
 			var envs = result.Tags.GroupBy(x => x.Value, (s, results) => new Environment
 			{
 				Name = s,
-			});
+        InstanceIds = results.Select(x => x.ResourceId).Distinct().ToList()
+			}).ToList();
 
 		  foreach (var env in envs)
 		  {
