@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using AWStruck.AWS;
 using AWStruck.Models;
 
 using Microsoft.Ajax.Utilities;
@@ -13,11 +14,30 @@ namespace AWStruck.Hubs
     [HubName("switchHub")]
     public class SwitchHub : Hub
     {
-        //  we don't need this as the client is not talking back to server !
+        [HubMethodName("stopEnv")]
+        public void StopEnv(string envId)
+        {
+            Environments.StopEnvironmentInternal(envId);
 
-        //public void UpdateStatus(InstanceStatus instanceStatus)
-        //{
-        //    Clients.All.updateInstanceStatus(instanceStatus);
-        //}
+            Clients.All.signal(
+                new InstanceStatus
+                {
+                    Id = envId,
+                    Status = "Stopped"
+                });
+        }
+
+        [HubMethodName("startEnv")]
+        public void StartEnv(string envId)
+        {
+            Environments.StartEnvironmentInternal(envId);
+
+            Clients.All.signal(
+                new InstanceStatus
+                {
+                    Id = envId,
+                    Status = "Started"
+                });
+        }
     }
 }
