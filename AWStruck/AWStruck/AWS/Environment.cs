@@ -13,5 +13,16 @@ namespace AWStruck
 		public string Name { get; set; }
 		public int InstanceCount { get { return InstanceIds.Count(); } }
 		public List<string> InstanceIds { get; set; }
+    public bool IsAuto { get; set; }
+
+	  public Environment CloneWithAuto(bool auto)
+	  {
+	    return new Environment()
+	    {
+	      Name = Name,
+	      InstanceIds = InstanceIds,
+	      IsAuto = auto
+	    };
+	  }
 	}
 }
