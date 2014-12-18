@@ -1,0 +1,26 @@
+﻿@using System.Configuration
+@{
+    var ennvironmentName = "NoName";
+    if (ConfigurationManager.AppSettings["environmentName"] != null)
+    {
+        ennvironmentName = ConfigurationManager.AppSettings["environmentName"];
+    }
+    ViewBag.EnvironmentName = ennvironmentName;
+    ViewBag.Title = "Home";
+}
+
+<div class="jumbotron">
+    <img src="~/Images/Hack_it_1.jpg" />
+    <h1>AWStruck</h1>
+    <h2>AWS Environment stopper.</h2>
+    <h1>@ViewBag.EnvironmentName</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Stop/Start AWS Environments</h2>
+    </div>
+    <div class="col-md-6">
+        <h2>Save Money</h2>
+    </div>
+</div>
