@@ -1,19 +1,31 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Linq;
+using System;
 using System.Web.Http;
+
+using Amazon.EC2.Model;
+
 using AWStruck.AWS;
 using AWStruck.Mongo;
+using AWStruck.Hubs;
 using AWStruck.Services;
 using Hangfire;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
+using AWStruck.Savings;
+
+using Microsoft.AspNet.SignalR;
+
+using InstanceStatus = AWStruck.Models.InstanceStatus;
+
 namespace AWStruck.Controllers.Api
 {
   public class EnvController : ApiController
   {
-    private EnvService _envService;
+        protected readonly Lazy<IHubContext> SwitchHub = new Lazy<IHubContext>(() => GlobalHost.ConnectionManager.GetHubContext<SwitchHub>());
+        private readonly EnvService _envService;
 
     public EnvController()
     {
@@ -34,18 +46,33 @@ namespace AWStruck.Controllers.Api
     }
 
     [HttpGet]
-    [Route("api/env/nogo")]
-    public string StopEnv([FromUri]string envId)
+        [Route("api/env/nogo/{envId}")]
+        public string StopEnv([FromUri] string envId)
     {
       Environments.StopEnvironmentInternal(envId);
+
+            SwitchHub.Value.Clients.All.signal(
+                new InstanceStatus
+                {
+                    Id = envId,
+                    Status = "Stopped"
+                });
+
       return "done";
     }
 
     [HttpGet]
-    [Route("api/env/go")]
-    public string StartEnv(string envId)
+        [Route("api/env/go/{envId}")]
+        public string StartEnv([FromUri] string envId)
     {
       Environments.StartEnvironmentInternal(envId);
+
+            SwitchHub.Value.Clients.All.signal(
+                new InstanceStatus
+                {
+                    Id = envId,
+                    Status = "Started"
+                });
       return "done";
     }
 
@@ -58,18 +85,34 @@ namespace AWStruck.Controllers.Api
       return "done";
     }
 
-		[Route("api/env/start")]
+        //Deprecated
+        [Route("api/env/start/")]
     [HttpGet]
-    public void StartInstance()
+        public StartInstancesResponse StartInstance()
     {
-      _envService.Start();
+            return _envService.Start();
     }
 
+        //Deprecated
     [Route("api/env/stop")]
     [HttpGet]
-    public void StopInstance()
+        public StopInstancesResponse StopInstance()
+        {
+            return _envService.Stop();
+        }
+
+        [Route("api/env")]
+        [HttpGet]
+        public IEnumerable<Environment> Envs()
+        {
+            return Environments.GetEnvironments(Global.CreateAmazonClient());
+        }
+
+        [Route("api/savings")]
+        [HttpGet]
+        public SavingsResponse GetSavings()
     {
-      _envService.Stop();
+            return SavingsHelper.CalculateSavings();
     }
   }
 }

@@ -1,39 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using Amazon;
 using Amazon.EC2;
 using Amazon.EC2.Model;
+using AWStruck.AWS;
 
 namespace AWStruck.Services
 {
   public class EnvService : IEnv
   {
-    public void Start()
+    private readonly AmazonEC2Config _amazonEC2Config;
+    private readonly List<string> _ids;
+    private readonly IAmazonEC2 _ec2;
+
+    public EnvService()
     {
-      var amazonEC2Config = new AmazonEC2Config
+      _amazonEC2Config = new AmazonEC2Config()
       {
         RegionEndpoint = RegionEndpoint.USWest2
       };
 
-      IAmazonEC2 ec2 = AWSClientFactory.CreateAmazonEC2Client(amazonEC2Config);
-      var ids = new List<string>() { "i-10f40d1e" };
-      var response = ec2.StartInstances(new StartInstancesRequest(ids));
-      Console.WriteLine(response.ToString());
+      _ids = new List<string>() { "i-10f40d1e" };
+
+      _ec2 = AWSClientFactory.CreateAmazonEC2Client(_amazonEC2Config);
     }
 
-    public void Stop()
+    public StartInstancesResponse Start()
     {
-      var amazonEC2Config = new AmazonEC2Config
-      {
-        RegionEndpoint = RegionEndpoint.USWest2
-      };
+      return _ec2.StartInstances(new StartInstancesRequest(_ids));
+    }
 
-      IAmazonEC2 ec2 = AWSClientFactory.CreateAmazonEC2Client(amazonEC2Config);
-      var ids = new List<string>() { "i-10f40d1e" };
-      var response = ec2.StopInstances(new StopInstancesRequest(ids));
-      Console.WriteLine(response.ToString());
+    public StopInstancesResponse Stop()
+    {
+      return _ec2.StopInstances(new StopInstancesRequest(_ids));
+    }
+
+    public IEnumerable<Environment> Envs()
+    {
+      return Environments.GetEnvironments(_ec2);
     }
   }
 }

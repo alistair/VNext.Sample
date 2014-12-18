@@ -1,9 +1,22 @@
 /** @jsx React.DOM */
 
 var React = window.React = require('react'),
+    EnvironmentStore = require("./stores/Environment"),
     Timer = require("./ui/Timer"),
     EnvList = require("./ui/EnvList"),
     mountNode = document.getElementById("app");
+
+var connection = $.hubConnection();
+var contosoChatHubProxy = connection.createHubProxy('switchHub');
+// contosoChatHubProxy.on('addContosoChatMessageToPage', function(userName, message) {
+//     console.log(userName + ' ' + message);
+// });
+connection.start()
+    .done(function(){ console.log('Now connected, connection ID=' + connection.id); })
+    .fail(function(){ console.log('Could not connect'); });
+
+
+
 
 
 var dummyData = [
@@ -27,7 +40,4 @@ var App = React.createClass({
   }
 });
 
-//<Timer />
-
 React.renderComponent(<App />, mountNode);
-

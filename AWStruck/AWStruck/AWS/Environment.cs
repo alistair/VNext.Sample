@@ -11,8 +11,15 @@ namespace AWStruck
 		}
 
 		public string Name { get; set; }
-		public int InstanceCount { get { return InstanceIds.Count(); } }
+		
+
+        public int InstanceCount
+        {
+            get { return InstanceIds.Count(); }
+        }
+
 		public List<string> InstanceIds { get; set; }
+    
     public bool IsAuto { get; set; }
 
 	  public Environment CloneWithAuto(bool auto)
@@ -24,5 +31,6 @@ namespace AWStruck
 	      IsAuto = auto
 	    };
 	  }
+        public string State { get; set; }
 	}
 }
