@@ -8,6 +8,8 @@ using AWStruck.AWS;
 using AWStruck.Hubs;
 using AWStruck.Services;
 
+using AWStruck.Savings;
+
 using Microsoft.AspNet.SignalR;
 
 using InstanceStatus = AWStruck.Models.InstanceStatus;
@@ -82,6 +84,13 @@ namespace AWStruck.Controllers.Api
         public IEnumerable<Environment> Envs()
         {
             return Environments.GetEnvironments(Global.CreateAmazonClient());
+        }
+
+        [Route("api/savings")]
+        [HttpGet]
+        public SavingsResponse GetSavings()
+        {
+            return SavingsHelper.CalculateSavings();
         }
     }
 }
