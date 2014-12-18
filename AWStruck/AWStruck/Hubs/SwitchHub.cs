@@ -42,6 +42,7 @@ namespace AWStruck.Hubs
                 });
         }
 
+        [HubMethodName("onConnected")]
         public override Task OnConnected()
         {
             IEnumerable<Environment> environments = Environments.GetEnvironments(Global.CreateAmazonClient()).Select(x => x.CloneWithAuto(IsAuto(x.Name)));
