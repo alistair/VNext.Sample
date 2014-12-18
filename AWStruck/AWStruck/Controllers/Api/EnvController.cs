@@ -117,7 +117,8 @@ namespace AWStruck.Controllers.Api
     [HttpGet]
     public SavingsResponse GetSavings()
     {
-      return SavingsHelper.CalculateSavings();
+            var savingsHelper = new SavingsHelper();
+            return savingsHelper.CalculateSavings();
     }
   }
 }
