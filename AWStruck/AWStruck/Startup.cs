@@ -3,7 +3,9 @@
 using Hangfire;
 using Hangfire.Mongo;
 
+using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 
 using Owin;
 
@@ -27,7 +29,18 @@ namespace AWStruck
                     configuration.UseDashboardPath("/hangfire");
                 });
 
-            app.MapSignalR();
+            //   app.MapSignalR();
+            app.Map(
+                "/signalr",
+                map =>
+                {
+                    map.UseCors(CorsOptions.AllowAll);
+                    var hubConfiguration = new HubConfiguration
+                    {
+                        EnableJSONP = true
+                    };
+                    map.RunSignalR(hubConfiguration);
+                });
         }
     }
 }
