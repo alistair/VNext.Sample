@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hangfire;
+using Hangfire.Mongo;
 using Microsoft.Owin;
 using Owin;
 
@@ -13,6 +15,13 @@ namespace AWStruck
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+			app.UseHangfire(
+				configuration =>
+				{
+					configuration.UseServer();
+					configuration.UseStorage(new MongoStorage("mongodb://localhost/", "aswtruck"));
+				}
+				);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace AWStruck.Services
 {
   public interface IEnv
   {
-    string Start();
-    string Stop();
+    void Start();
+    void Stop();
   }
 }

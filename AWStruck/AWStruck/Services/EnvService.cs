@@ -8,7 +8,7 @@ using Amazon.EC2.Model;
 
 namespace AWStruck.Services
 {
-  public class EnvService
+  public class EnvService : IEnv
   {
     public void Start()
     {
