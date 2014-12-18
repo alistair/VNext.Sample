@@ -46,6 +46,7 @@ AutoTest.config*
 
 #nodejs
 node_modules
+bower_components
 
 #outputfiles
 publish
@@ -56,3 +57,4 @@ publish
 !lesscompiler/bin/node_modules/less/bin
 *.css
 src/TheHive/TheHive/js/siteJs.js.map
+AWStruck/AWStruck/bin/
