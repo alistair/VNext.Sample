@@ -2,12 +2,12 @@
 {
   public class EnvironmentConfig
   {
-    public string Id { get; set; }
-    //public TYPE Type { get; set; }
   }
 
-  public enum ManagementType
+  public enum ManagementMode
   {
-
+    AlwaysOn,
+    AlwaysOff,
+    Auto
   }
 }

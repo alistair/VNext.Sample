@@ -1,13 +1,19 @@
-﻿using Antlr.Runtime.Misc;
+﻿using System;
+using System.Configuration;
+using Antlr.Runtime.Misc;
 using Hangfire.Mongo;
 using MongoDB.Driver;
 
 namespace AWStruck.Mongo
 {
-  public class MongoProvider
+  public static class MongoProvider
   {
-    //public static Action<Action<MongoCollection<>>
-    //public static MongoCollectio
+    public static Lazy<MongoDatabase> Database = new Lazy<MongoDatabase>(() =>
+    {
+      var connectionString = ConfigurationManager.AppSettings["MongoDB.ConnectionString"];
+      var database = ConfigurationManager.AppSettings["MongoDB.Database"];
+      return GetDatabase(GetMongoClient(connectionString), database);
+    }); 
 
     public static MongoDatabase GetDatabase(MongoClient client, string databaseName)
     {
