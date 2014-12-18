@@ -25,7 +25,7 @@ namespace AWStruck
                 configuration =>
                 {
                     configuration.UseServer();
-                    configuration.UseStorage(new MongoStorage("mongodb://localhost/", "aswtruck"));
+                    configuration.UseStorage(new MongoStorage("mongodb://54.69.155.172/", "aswtruck"));
                     configuration.UseDashboardPath("/hangfire");
                 });
 
