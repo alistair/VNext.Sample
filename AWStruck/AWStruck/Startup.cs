@@ -22,9 +22,6 @@ namespace AWStruck
 					configuration.UseStorage(new MongoStorage("mongodb://localhost/", "aswtruck"));
 				}
 				);
-
-	        BackgroundJob.Schedule(() => AWSTasks.StopInstancesTask("mytest"), DateTimeOffset.UtcNow);
-			
         }
     }
 }
