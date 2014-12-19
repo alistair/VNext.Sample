@@ -25,7 +25,8 @@ namespace AWStruck
     public bool IsAuto { get; set; }
     public CronDescription[] Descriptions { get; set; }
     public string State { get; set; }
-
+        public string Type { get; set; }
+        
      public Environment CloneWithAutoAndDescriptions(bool auto, CronDescription[] descs)
 	  {
 	    return new Environment()

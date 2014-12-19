@@ -20,7 +20,9 @@ namespace AWStruck.Controllers.Api
 {
     public class EnvController : ApiController
     {
-        protected readonly Lazy<IHubContext> SwitchHub = new Lazy<IHubContext>(() => GlobalHost.ConnectionManager.GetHubContext<SwitchHub>());
+    protected readonly Lazy<IHubContext> SwitchHub =
+      new Lazy<IHubContext>(() => GlobalHost.ConnectionManager.GetHubContext<SwitchHub>());
+
 
         [HttpGet]
         public IEnumerable<Environment> Index()
@@ -39,57 +41,60 @@ namespace AWStruck.Controllers.Api
                 x => new CronDescription
                 {
                     Name = x["Key"].AsString.Split('_')[1],
-                    Description = Cron.GetDescription((string)x["Value"])
+        Description = Cron.GetDescription((string)x["Value"])
                 }).ToArray();
 
             return env.CloneWithAutoAndDescriptions(results.Any(), desc);
         }
 
         [HttpGet]
-        [Route("api/env/nogo/{envId}")]
-        public string StopEnv([FromUri] string envId)
+    [Route("api/env/nogo/{envId}")]
+    public string StopEnv([FromUri] string envId)
         {
             Environments.StopEnvironmentInternal(envId);
 
-            SwitchHub.Value.Clients.All.signal(
-                new InstanceStatus
-                {
-                    Id = envId,
-                    Status = "Stopped"
-                });
+      SwitchHub.Value.Clients.All.signal(
+        new InstanceStatus
+        {
+          Id = envId,
+          Status = "Stopped"
+        });
 
             return "done";
         }
 
         [HttpGet]
-        [Route("api/env/go/{envId}")]
-        public string StartEnv([FromUri] string envId)
+    [Route("api/env/go/{envId}")]
+    public string StartEnv([FromUri] string envId)
         {
             Environments.StartEnvironmentInternal(envId);
 
-            SwitchHub.Value.Clients.All.signal(
-                new InstanceStatus
-                {
-                    Id = envId,
-                    Status = "Started"
-                });
+      SwitchHub.Value.Clients.All.signal(
+        new InstanceStatus
+        {
+          Id = envId,
+          Status = "Started"
+        });
             return "done";
         }
 
         [HttpGet]
-        [Route("api/env/createSchedule")]
+    [Route("api/env/createSchedule/{envId}")]
         public string CreateEnvironment([FromUri] string envId)
         {
-            RecurringJob.AddOrUpdate(string.Format("{0}_start", envId), Environments.StartEnvironment(envId), "0 5 * * 1,2,3,4,5");
-            RecurringJob.AddOrUpdate(string.Format("{0}_stop", envId), Environments.StopEnvironment(envId), "0 18 * * 1,2,3,4,5");
+      RecurringJob.AddOrUpdate(string.Format("{0}_start", envId), Environments.StartEnvironment(envId), "5 * * * *");
+      RecurringJob.AddOrUpdate(string.Format("{0}_stop", envId), Environments.StopEnvironment(envId), "5 * * * *");
             return "done";
-        }
+        //Deprecated
+        //Deprecated
+    }
 
-        [Route("api/savings")]
-        [HttpGet]
-        public SavingsResponse GetSavings()
+    [Route("api/savings")]
+    [HttpGet]
+    public SavingsResponse GetSavings()
         {
-            return SavingsHelper.CalculateSavings();
+            var savingsHelper = new SavingsHelper();
+            return savingsHelper.CalculateSavings();
         }
     }
 }
