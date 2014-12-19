@@ -1,6 +1,4 @@
 /** @jsx React.DOM */
-var React = require('react');
-    Switch = require("./Switch");
 
 var EnvItem = React.createClass({
 
@@ -19,7 +17,11 @@ var EnvItem = React.createClass({
   },
 
   toggleOn: function() {
-    this.setState({ isOn: !this.state.isOn })
+
+    console.log( this.props )
+
+    var action = this.state.isOn ? EnvActions.end : EnvActions.start;
+    this.setState({ isOn: !this.state.isOn }, action.bind( null, this.props.data.name ))
   },
 
   render: function() {
@@ -45,4 +47,3 @@ var EnvItem = React.createClass({
   }
 });
 
-module.exports = EnvItem;

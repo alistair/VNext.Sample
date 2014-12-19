@@ -1,9 +1,26 @@
 
+var sendMessage = function( connectionName, envId ) {
 
-var Environment = {
-    fetch: function() {
-        //return $.get( "http://54.149.71.156/awstruck/api/env" );
-    }
+    console.log( connectionName, envId )
+
+    proxy.invoke( connectionName, envId ).done(function() {
+        console.log('success', arguments);
+    }).fail(function() {
+        //console.log('fail', arguments)
+    })
 }
 
-module.exports = Environment
+
+var envAction = function( payload ){
+
+console.log(payload)
+
+    if( payload.actionType === "off" ) {
+        sendMessage("stopEnv", "TestEnv2");
+    } else {
+        sendMessage("stopEnv", "TestEnv2");
+    }
+
+}
+
+envDispatcher.register( envAction )

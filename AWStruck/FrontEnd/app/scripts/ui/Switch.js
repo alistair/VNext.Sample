@@ -1,5 +1,4 @@
 /** @jsx React.DOM */
-var React = require('react');
 
 var Switch = React.createClass({
 
@@ -12,11 +11,9 @@ var Switch = React.createClass({
                     <div className='visible-thumb'>
                     </div>
                 </div>
-                <div className='switch-label'>Off</div>
+                <div className='switch-label off'>Off</div>
             </div>
         </div>
       )
     }
 });
-
-module.exports = Switch;

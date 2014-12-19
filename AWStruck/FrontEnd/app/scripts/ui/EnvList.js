@@ -1,6 +1,4 @@
 /** @jsx React.DOM */
-var React = require('react'),
-  EnvItem = require("./EnvItem");
 
 var EnvList = React.createClass({
 
@@ -13,5 +11,3 @@ var EnvList = React.createClass({
     }
 
 });
-
-module.exports = EnvList;

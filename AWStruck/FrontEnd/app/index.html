@@ -14,10 +14,6 @@
         <link rel="stylesheet" href="styles/bootstrap.css">
 
 
-        <!-- build:js scripts/vendor/modernizr.js -->
-        <script src="bower_components/modernizr/modernizr.js"></script>
-        <!-- endbuild -->
-
     </head>
     <body>
         <!--[if lt IE 10]>
@@ -27,9 +23,7 @@
 
         <div class="container">
             <div class="header">
-                <!-- <ul class="nav nav-pills pull-right">
-                    <li class="active"><a href="#">Home</a></li>
-                </ul> -->
+                <h3>AWS Environments</h3>
             </div>
 
             <div id="app">
@@ -45,13 +39,26 @@
         </div>
 
 
-        <!-- build:js scripts/vendor.js -->
-        <!-- bower:js -->
-        <script src="bower_components/jquery/dist/jquery.js"></script>
+
+        <script src="scripts/dependencies/jquery.js"></script>
+        <script src="scripts/dependencies/react-with-addons.js"></script>
+        <script src="scripts/dependencies/jsx-transformer.js"></script>
         <script src="scripts/signalR/jquery.signalR.js"></script>
-        <script src="signalr/hubs"></script>
-        <!-- endbower -->
-        <!-- endbuild -->
-        <script src="scripts/app.js"></script>
+
+        <script type="text/javascript" src="scripts/dependencies/invariant.js"></script>
+        <script type="text/javascript" src="scripts/dependencies/dispatcher.js"></script>
+
+
+        <script type="text/jsx" src="scripts/ui/EnvItem.js"></script>
+        <script type="text/jsx" src="scripts/ui/EnvList.js"></script>
+        <script type="text/jsx" src="scripts/ui/Switch.js"></script>
+
+        <script type="text/javascript" src="scripts/actions/envActions.js"></script>
+
+        <script type="text/javascript" src="scripts/stores/Environment.js"></script>
+
+
+        <!--<script src="signalr/hubs"></script>-->
+        <script type="text/jsx" src="scripts/app.js"></script>
     </body>
 </html>
