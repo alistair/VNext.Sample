@@ -6,6 +6,8 @@ using AWStruck.AWS;
 using AWStruck.Models;
 using AWStruck.Mongo;
 
+using Hangfire;
+
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 
@@ -45,17 +47,27 @@ namespace AWStruck.Hubs
         [HubMethodName("onConnected")]
         public override Task OnConnected()
         {
-            IEnumerable<Environment> environments = Environments.GetEnvironments(Global.CreateAmazonClient()).Select(x => x.CloneWithAuto(IsAuto(x.Name)));
+            IEnumerable<Environment> environments = Environments.GetEnvironments(Global.CreateAmazonClient()).Select(Map);
             Clients.All.signal(environments);
 
             return base.OnConnected();
         }
 
-        private bool IsAuto(string envId)
+
+        private Environment Map(Environment env)
         {
-            return MongoProvider.Database.Value.GetCollection("hangfire.set")
-                .AsQueryable()
-                .Count(x => ((string)x["Key"]).StartsWith(string.Format("recurring-job:{0}", envId))) > 0;
+            var results = MongoProvider.Database.Value.GetCollection("hangfire.hash")
+              .AsQueryable()
+              .Where(x => ((string)x["Key"]).StartsWith(string.Format("recurring-job:{0}", env.Name)) && x["Field"] == "Cron")
+              .ToList();
+
+            var desc = results.Select(x => new CronDescription
+            {
+                Name = x["Key"].AsString.Split('_')[1],
+                Description = Cron.GetDescription((string)x["Value"])
+            }).ToArray();
+
+            return env.CloneWithAutoAndDescriptions(results.Any(), desc);
         }
     }
 }

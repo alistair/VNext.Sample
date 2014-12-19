@@ -20,15 +20,10 @@ namespace AWStruck.AWS
                 (s, results) => new Environment
                 {
                     Name = s,
-                    InstanceIds = results.Select(x => x.ResourceId).Distinct().ToList()
+                    InstanceIds = results.Select(x => x.ResourceId).Distinct().ToList(),
                 }).ToList();
 
-            foreach (Environment env in envs)
-            {
-                env.State = GetInstanceState(ec2, env.InstanceIds.FirstOrDefault());
-            }
-
-            return envs;
+            return envs.Select(env => EnchanceEnvProperties(ec2, env)).ToList();
         }
 
         private static List<Filter> GetEnvironmentTagFilters()
@@ -71,19 +66,36 @@ namespace AWStruck.AWS
             return () => StopEnvironmentInternal(taskId);
         }
 
-        public static string GetInstanceState(IAmazonEC2 ec2, string instanceId)
+        //public static string GetInstanceState(IAmazonEC2 ec2, string instanceId)
+        //{
+        //    //State is taken from the first instance
+        //    DescribeInstancesResponse response = ec2.DescribeInstances(
+        //        new DescribeInstancesRequest
+        //        {
+        //            InstanceIds = new List<string>
+        //            {
+        //                instanceId
+        //            }
+        //        });
+
+        //    return response.DescribeInstancesResult.Reservations[0].Instances[0].State.Name.ToString();
+        //}
+
+        private static Environment EnchanceEnvProperties(IAmazonEC2 ec2, Environment environment)
         {
-            //State is taken from the first instance
             DescribeInstancesResponse response = ec2.DescribeInstances(
                 new DescribeInstancesRequest
                 {
                     InstanceIds = new List<string>
                     {
-                        instanceId
+                        environment.InstanceIds.FirstOrDefault()
                     }
                 });
 
-            return response.DescribeInstancesResult.Reservations[0].Instances[0].State.Name.ToString();
+            environment.State = response.Reservations[0].Instances[0].State.Name.ToString();
+            environment.Type = response.Reservations[0].Instances[0].InstanceType.ToString();
+
+            return environment;
         }
     }
 }
