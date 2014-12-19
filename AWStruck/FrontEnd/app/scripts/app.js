@@ -8,7 +8,7 @@ var dummyData = [
     { name: "Environment 2", id: "Env2", isOn: false, startAt: "07:00", stopAt: "20:00" }
 ];
 
-var connection = $.hubConnection("http://54.149.71.156/awstruck");
+var connection = $.hubConnection("http://localhost:59585");
 var proxy = connection.createHubProxy('switchHub');
 
 var isOn = function( env ) {

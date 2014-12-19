@@ -18,7 +18,7 @@ console.log(payload)
     if( payload.actionType === "off" ) {
         sendMessage("stopEnv", "TestEnv2");
     } else {
-        sendMessage("stopEnv", "TestEnv2");
+        sendMessage("startEnv", "TestEnv2");
     }
 
 }
